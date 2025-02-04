@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin
                 )
         );
+        //sasasd
         http.csrf(csrf -> csrf.disable());
         http.addFilterBefore(authenticationJwtTokenFilter(),
                 UsernamePasswordAuthenticationFilter.class);
