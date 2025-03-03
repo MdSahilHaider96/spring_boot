@@ -75,31 +75,5 @@ public class Greeetings {
 
         return ResponseEntity.ok(response);
     }
-//    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-//        Authentication authentication;
-//        try {
-//            authentication = authenticationManager
-//                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-//        } catch (AuthenticationException exception) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("message", "Bad credentials");
-//            map.put("status", false);
-//            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-//        }
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        // retrieve the userdetails and generate the jwt
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//
-//        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
-//
-//        List<String> roles = userDetails.getAuthorities().stream()
-//                .map(item -> item.getAuthority())
-//                .collect(Collectors.toList());
-//
-//            LoginResponse response = new LoginResponse(userDetails.getUsername(), jwtToken, roles );
-//
-//        return ResponseEntity.ok(response);
-//    }
 }
 
