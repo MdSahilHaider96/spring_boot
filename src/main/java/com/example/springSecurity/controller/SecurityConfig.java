@@ -30,8 +30,10 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
     DataSource dataSource;
+
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
@@ -43,7 +45,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers("/Mysql-console/**").permitAll()
+                authorizeRequests.requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/signin").permitAll()
                         .anyRequest().authenticated());
         http.sessionManagement(
@@ -54,10 +56,10 @@ public class SecurityConfig {
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
         //http.httpBasic(withDefaults());
         http.headers(headers -> headers
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                .frameOptions(frameOptions -> frameOptions
+                        .sameOrigin()
                 )
         );
-        //sasasd
         http.csrf(csrf -> csrf.disable());
         http.addFilterBefore(authenticationJwtTokenFilter(),
                 UsernamePasswordAuthenticationFilter.class);
@@ -70,35 +72,34 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
+
     @Bean
     public CommandLineRunner initData(UserDetailsService userDetailsService) {
         return args -> {
             JdbcUserDetailsManager manager = (JdbcUserDetailsManager) userDetailsService;
-//            UserDetails user1 = User.withUsername("user3")
-//                    .password(passwordEncoder().encode("password3"))
-//                    .roles("USER3")
+//            UserDetails user1 = User.withUsername("user1")
+//                    .password(passwordEncoder().encode("password1"))
+//                    .roles("USER")
 //                    .build();
-//            UserDetails sahil = User.withUsername("sahil3")
-//                    .password(passwordEncoder().encode("sahil3"))
-//                    .roles("SAHIL")
-//                    .build();
-//            UserDetails admin = User.withUsername("admin3")
+//            UserDetails admin = User.withUsername("admin")
 //                    //.password(passwordEncoder().encode("adminPass"))
 //                    .password(passwordEncoder().encode("adminPass"))
 //                    .roles("ADMIN")
 //                    .build();
+
             JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
 //            userDetailsManager.createUser(user1);
 //            userDetailsManager.createUser(admin);
-//            userDetailsManager.createUser(sahil);
         };
     }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+        return builder.getAuthenticationManager();
     }
 }
